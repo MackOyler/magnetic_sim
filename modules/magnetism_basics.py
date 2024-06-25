@@ -55,7 +55,7 @@ def visualize_field_lines(magnets, width, height, grid_size=100, grid_extent=5, 
             ax.plot(magnet['position'][0], magnet['position'][1], 'go')  # Highlight selected magnet with green dot
         else:
             ax.plot(magnet['position'][0], magnet['position'][1], 'ro')  # Mark magnet positions with red dots
-        ax.annotate('Magnet', (magnet['position'][0], magnet['position'][1]),
+        ax.annotate(f'Magnet {index}', (magnet['position'][0], magnet['position'][1]),
                     textcoords="offset points", xytext=(5,5), ha='center')
 
     explanation_text = (
