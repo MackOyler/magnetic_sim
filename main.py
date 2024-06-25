@@ -9,12 +9,11 @@ def main():
     screen = pygame.display.set_mode((1200, 800))
     manager = pygame_gui.UIManager((1200, 800))
     
-    magnet_strength_slider = UIHorizontalSlider(pygame.Rect((100, 50), (200, 30)), 1, (0, 10), manager)
-    magnet_strength_label = UILabel(pygame.Rect((100, 20), (200, 30)), "Magnet Strength", manager)
+    magnet_strength_slider = UIHorizontalSlider(pygame.Rect((100, 90), (200, 30)), 1, (0, 10), manager)
+    magnet_strength_label = UILabel(pygame.Rect((100, 60), (200, 30)), "Magnet Strength", manager)
     
     magnets = [{'position': pygame.Vector2(400, 300), 'moment': pygame.Vector2(0, 1)}]
     
-    # Draw buttons and assign them to variables
     clear_button, reset_button = draw_buttons(screen)
     
     running = True
@@ -25,13 +24,17 @@ def main():
                 running = False
             manager.process_events(event)
             check_button_click(event, magnets, clear_button, reset_button)
-        
+            handle_user_input(event, magnets)
+
         screen.fill((255, 255, 255))
         
         manager.update(time_delta)
         
-        # Handle user input
-        running, selected_magnet_index = handle_user_input(magnets)
+        # Update magnetic moment based on slider value
+        magnet_strength = magnet_strength_slider.get_current_value()
+        if magnets:
+            for magnet in magnets:
+                magnet['moment'] = pygame.Vector2(0, magnet_strength)
         
         # Draw buttons
         clear_button, reset_button = draw_buttons(screen)
