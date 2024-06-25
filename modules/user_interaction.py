@@ -10,34 +10,29 @@ def initialize_interface():
 def handle_user_input(magnets):
     selected_magnet_index = None
     for event in pygame.event.get():
-        print(f"Event: {event}")  # Debugging print
         if event.type == pygame.QUIT:
             return False, selected_magnet_index
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = np.array(pygame.mouse.get_pos()) - [0, 50]  # Adjust for button area
-            print(f"Mouse Position: {mouse_pos}, Button: {event.button}")  # Debugging print
+            mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
             if event.button == 1:  # Left click to add a new magnet
-                magnets.append({'position': mouse_pos, 'moment': np.array([0, 1, 0])})
-                print(f"Added Magnet: {magnets[-1]}")  # Debugging print
+                magnets.append({'position': mouse_pos, 'moment': pygame.Vector2(0, 1)})
             elif event.button == 3:  # Right click to remove the nearest magnet
                 if magnets:
-                    distances = [np.linalg.norm(m['position'] - mouse_pos) for m in magnets]
+                    distances = [magnet['position'].distance_to(mouse_pos) for magnet in magnets]
                     nearest_magnet_index = np.argmin(distances)
                     if distances[nearest_magnet_index] < 20:  # Only remove if close enough
-                        removed_magnet = magnets.pop(nearest_magnet_index)
-                        print(f"Removed Magnet: {removed_magnet}")  # Debugging print
+                        magnets.pop(nearest_magnet_index)
 
         if event.type == pygame.MOUSEMOTION:
             if pygame.mouse.get_pressed()[0]:  # Left click and drag to move a magnet
-                mouse_pos = np.array(pygame.mouse.get_pos()) - [0, 50]  # Adjust for button area
+                mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
                 if magnets:
-                    distances = [np.linalg.norm(m['position'] - mouse_pos) for m in magnets]
+                    distances = [magnet['position'].distance_to(mouse_pos) for magnet in magnets]
                     nearest_magnet_index = np.argmin(distances)
                     if distances[nearest_magnet_index] < 20:  # Only move if close enough
                         magnets[nearest_magnet_index]['position'] = mouse_pos
                         selected_magnet_index = nearest_magnet_index
-                        print(f"Moved Magnet: {magnets[nearest_magnet_index]}")  # Debugging print
 
     return True, selected_magnet_index
 
@@ -60,8 +55,6 @@ def check_button_click(event, magnets, clear_button, reset_button):
     if event.type == pygame.MOUSEBUTTONDOWN:
         if clear_button.collidepoint(event.pos):
             magnets.clear()
-            print("Cleared Magnets")  # Debugging print
         if reset_button.collidepoint(event.pos):
             magnets.clear()
-            magnets.append({'position': np.array([400, 300]), 'moment': np.array([0, 1, 0])})
-            print("Reset Magnets")  # Debugging print
+            magnets.append({'position': pygame.Vector2(400, 300), 'moment': pygame.Vector2(0, 1)})
