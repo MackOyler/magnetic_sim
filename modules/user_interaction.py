@@ -15,7 +15,9 @@ def handle_user_input(event, magnets):
     if event.type == pygame.MOUSEBUTTONDOWN:
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
         if event.button == 1:  # Left click to add a new magnet
-            magnets.append({'position': mouse_pos, 'moment': pygame.Vector2(0, 1)})
+            # Check if the click is not on a button or slider
+            if not (10 <= mouse_pos.x <= 90 and 10 <= mouse_pos.y <= 40) and not (100 <= mouse_pos.x <= 180 and 10 <= mouse_pos.y <= 40) and not (100 <= mouse_pos.x <= 300 and 60 <= mouse_pos.y <= 120):
+                magnets.append({'position': mouse_pos, 'moment': pygame.Vector2(0, 1)})
         elif event.button == 3:  # Right click to remove the nearest magnet
             if magnets:
                 distances = [magnet['position'].distance_to(mouse_pos) for magnet in magnets]
